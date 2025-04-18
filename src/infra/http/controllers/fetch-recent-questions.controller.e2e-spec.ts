@@ -1,5 +1,5 @@
-import { AppModule } from "@/app.module";
-import { PrismaService } from "@/prisma/prisma.service";
+import { AppModule } from "@/infra/app.module";
+import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { INestApplication } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
@@ -50,7 +50,7 @@ describe('Fetch recent questions (E2E)', () => {
                     slug: "user.id2",
                     content: 'question content2',
                     authorId: user.id,
-                }, 
+                },
             ],
         })
 
@@ -62,7 +62,7 @@ describe('Fetch recent questions (E2E)', () => {
         expect(response.statusCode).toBe(200);
         expect(response.body).toEqual({
             questions: [
-               expect.objectContaining({
+                expect.objectContaining({
                     title: 'question 1',
                 }),
                 expect.objectContaining({

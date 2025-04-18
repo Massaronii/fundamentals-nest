@@ -1,15 +1,16 @@
-import { AppModule } from "@/app.module";
-import { PrismaService } from "@/prisma/prisma.service";
+import { AppModule } from "@/infra/app.module";
+import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { INestApplication } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import { hash } from "bcryptjs";
 import request from "supertest"
-import { a } from "vitest/dist/chunks/suite.d.FvehnV49";
 
-describe('Authjenticate (E2E)', () => {
+describe('Create questions Controller (E2E)', () => {
 
     let app: INestApplication;
     let prisma: PrismaService
+    let jwt: JwtService
 
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -20,30 +21,39 @@ describe('Authjenticate (E2E)', () => {
 
         prisma = moduleRef.get(PrismaService);
 
+        jwt = moduleRef.get(JwtService);
+
         await app.init();
     });
 
-    test('[POST] /sessions', async () => {
-        await prisma.user.create({
+    test('[POST] /questions', async () => {
+        const user = await prisma.user.create({
             data: {
                 name: 'John Doe',
                 email: 'john@example.com',
                 password: await hash('password', 8),
             },
         });
-    
+
+        const acessToken = jwt.sign({ sub: user.id })
+
         const response = await request(app.getHttpServer())
-            .post('/sessions')
+            .post('/questions')
+            .set('Authorization', `Bearer ${acessToken}`)
             .send({
-                email: 'john@example.com',
-                password: 'password',
+                title: 'new question',
+                content: 'question content',
             })
 
         expect(response.statusCode).toBe(201);
-        expect(response.body).toHaveProperty('acess_token');
-        expect(response.body).toEqual({
-            acess_token: expect.any(String),
+
+        const questionOnDatabase = await prisma.question.findFirst({
+            where: {
+                title: 'new question',
+            },
         });
+
+        expect(questionOnDatabase).toBeTruthy();
     });
 
 });
