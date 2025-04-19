@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { envSchema } from './env';
+import { envSchema } from './env/env';
 import { HttpModule } from './http/http.module';
 import { AuthModule } from './auth/auth.module';
+import { EnvModule } from './env/env.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -11,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
   }),
     AuthModule,
     HttpModule,
+    EnvModule
   ]
 })
 export class AppModule { }
