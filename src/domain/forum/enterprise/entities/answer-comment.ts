@@ -7,8 +7,8 @@ export interface AnswerCommentProps extends CommentProps {
   answerId: UniqueEntityId
   authorId: UniqueEntityId
   content: string
-  createAt: Date
-  updateAt?: Date
+  createdAt: Date
+  updatedAt?: Date | null
 }
 export class AnswerComment extends AggregateRoot<AnswerCommentProps> {
   get answerId() {
@@ -23,27 +23,31 @@ export class AnswerComment extends AggregateRoot<AnswerCommentProps> {
     return this.props.content
   }
 
+  get createdAt() {
+    return this.props.createdAt
+  }
+
+  get updatedAt() {
+    return this.props.updatedAt
+  }
+
   set content(content: string) {
     this.props.content = content
     this.touch()
   }
 
-  get updateAt() {
-    return this.props.updateAt
-  }
-
   private touch() {
-    this.props.updateAt = new Date()
+    this.props.updatedAt = new Date()
   }
 
   static create(
-    props: Optional<AnswerCommentProps, 'createAt'>,
+    props: Optional<AnswerCommentProps, 'createdAt'>,
     id?: UniqueEntityId,
   ) {
     const answerComment = new AnswerComment(
       {
         ...props,
-        createdAt: props.createAt ?? new Date(),
+        createdAt: props.createdAt ?? new Date(),
       },
       id,
     )

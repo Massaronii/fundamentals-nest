@@ -24,22 +24,26 @@ export class QuestionComment extends AggregateRoot<QuestionCommentProps> {
     this.touch()
   }
 
-  get updateAt() {
-    return this.props.updateAt
+  get createdAt() {
+    return this.props.createdAt
+  }
+
+  get updatedAt() {
+    return this.props.updatedAt
   }
 
   private touch() {
-    this.props.updateAt = new Date()
+    this.props.updatedAt = new Date()
   }
 
   static create(
-    props: Optional<QuestionCommentProps, 'createAt'>,
+    props: Optional<QuestionCommentProps, 'createdAt'>,
     id?: UniqueEntityId,
   ) {
     const questionComment = new QuestionComment(
       {
         ...props,
-        createdAt: props.createAt ?? new Date(),
+        createdAt: props.createdAt ?? new Date(),
       },
       id,
     )

@@ -4,8 +4,8 @@ import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 export interface CommentProps {
   authorId: UniqueEntityId
   content: string
-  createAt: Date
-  updateAt?: Date
+  createdAt: Date
+  updatedAt?: Date | null
 }
 
 export abstract class Comment<
@@ -24,15 +24,15 @@ export abstract class Comment<
     this.touch()
   }
 
-  get createAt() {
-    return this.props.createAt
+  get createdAt() {
+    return this.props.createdAt
   }
 
-  get updateAt() {
-    return this.props.updateAt
+  get updatedAt() {
+    return this.props.updatedAt
   }
 
   private touch() {
-    this.props.updateAt = new Date()
+    this.props.updatedAt = new Date()
   }
 }
