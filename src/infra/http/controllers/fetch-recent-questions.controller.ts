@@ -1,5 +1,4 @@
-import { BadRequestException, Controller, Get, Query, UseGuards } from "@nestjs/common";
-import { JwtAuthGuard } from "@/infra/auth/jwt-auth-guard";
+import { BadRequestException, Controller, Get, Query } from "@nestjs/common";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
 import { number, z } from "zod";
 import { FetchRecentQuestionsUseCase } from "@/domain/forum/application/use-cases/fetch-recent-questions";
