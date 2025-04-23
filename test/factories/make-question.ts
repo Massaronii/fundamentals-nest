@@ -8,6 +8,7 @@ import { PrismaQuestionMapper } from '@/infra/database/prisma/mappers/prisma-que
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { faker } from '@faker-js/faker'
 import { Injectable } from '@nestjs/common'
+import { randomUUID } from 'crypto'
 
 export function makeQuestion(
   override: Partial<QuestionProps> = {},
@@ -17,7 +18,7 @@ export function makeQuestion(
     {
       authorId: new UniqueEntityId(),
       title: faker.lorem.sentence(),
-      slug: Slug.create('example-question'),
+      slug: Slug.create(`example-question-${randomUUID()}`),
       content: faker.lorem.text(),
       ...override,
     },
