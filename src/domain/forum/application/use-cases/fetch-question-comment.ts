@@ -16,10 +16,10 @@ type FetchQuestionCommentUseCaseReponse = Either<
 >
 
 @Injectable()
-export class FetchQuestionCommentUseCase {
+export class FetchQuestionCommentsUseCase {
   constructor(
     private questionCommentsRepository: QuestionsCommentsRepository,
-  ) {}
+  ) { }
 
   async execute({
     questionId,

@@ -44,7 +44,7 @@ export class PrismaQuestionCommentsRepository implements QuestionsCommentsReposi
     async findManyByQuestionId(questionId: string, { page }: PaginationParams): Promise<QuestionComment[]> {
         const questionsComment = await this.prisma.comment.findMany({
             where: {
-                id: questionId,
+                questionId: questionId,
             },
             orderBy: {
                 createdAt: 'desc',

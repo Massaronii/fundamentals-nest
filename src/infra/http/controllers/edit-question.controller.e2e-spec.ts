@@ -52,8 +52,6 @@ describe('Edit questions Controller (E2E)', () => {
                 AttachmentsIds: []
             })
 
-            console.log(response.body)
-
         expect(response.statusCode).toBe(204);
 
         const questionOnDatabase = await prisma.question.findFirst({
