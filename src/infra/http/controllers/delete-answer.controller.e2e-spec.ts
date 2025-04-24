@@ -9,7 +9,7 @@ import { AnswerFactory } from "test/factories/make-answer";
 import { QuestionFactory } from "test/factories/make-question";
 import { StudentFactory } from "test/factories/make-student";
 
-describe('Edit answer Controller (E2E)', () => {
+describe('Delete answer Controller (E2E)', () => {
 
     let app: INestApplication;
     let prisma: PrismaService
@@ -35,7 +35,7 @@ describe('Edit answer Controller (E2E)', () => {
         await app.init();
     });
 
-    test('[PUT] /answers/:id', async () => {
+    test('[Delete] /answers/:id', async () => {
         const user = await studentFactory.makePrismaStudent()
 
         const acessToken = jwt.sign({ sub: user.id.toString() })
@@ -52,21 +52,18 @@ describe('Edit answer Controller (E2E)', () => {
         const answerId = answer.id.toString()
 
         const response = await request(app.getHttpServer())
-            .put(`/answers/${answerId}`)
+            .delete(`/answers/${answerId}`)
             .set('Authorization', `Bearer ${acessToken}`)
-            .send({
-                content: 'new content',
-            })            
+            .send()
 
         expect(response.statusCode).toBe(204);
 
-        const answerOnDatabase = await prisma.answer.findFirst({
+        const answerOnDatabase = await prisma.answer.findUnique({
             where: {
-                content: 'new content',
+                id: answerId,
             },
         });
 
-        expect(answerOnDatabase).toBeTruthy();
+        expect(answerOnDatabase).toBeNull();
     });
-
 });

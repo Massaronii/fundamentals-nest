@@ -6,7 +6,6 @@ import { z } from "zod";
 import { EditAnswerUseCase } from "@/domain/forum/application/use-cases/edit-answer";
 
 const editAnswerBodySchema = z.object({
-    title: z.string(),
     content: z.string(),
 });
 
@@ -26,17 +25,17 @@ export class EditAnswerController {
         @CurrentUser() user: UserPayload,
         @Param('id') answerId: string,
     ) {
-        const {  content } = body;
+        const { content } = body;
         const userId = user.sub;
 
-      const result = await this.editAnswer.execute({
+        const result = await this.editAnswer.execute({
             content,
             authorId: userId,
+            answerId,
             attachmentsIds: [],
-            answerId
         })
 
-        if(result.isLeft()) {
+        if (result.isLeft()) {
             throw new BadRequestException();
         }
     }
