@@ -62,8 +62,8 @@ import { UploadAndCreateAttachmentUseCase } from "@/domain/forum/application/use
         DeleteAnswerCommentController,
         FetchQuestionCommentsController,
         FetchAnswerCommentsController,
-        UploadAttachmentController
-    ],
+        UploadAttachmentController,
+    ], 
     providers: [
         CreateQuestionUseCase,
         FetchRecentQuestionsUseCase,

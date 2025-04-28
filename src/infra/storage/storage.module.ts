@@ -1,18 +1,16 @@
-import { Module } from "@nestjs/common";
-import { R2Storage } from "./r2-storage";
-import { Uploader } from "@/domain/forum/application/storage/uploader";
-import { EnvModule } from "../env/env.module";
+import { Uploader } from '@/domain/forum/application/storage/uploader'
+import { Module } from '@nestjs/common'
+import { R2Storage } from './r2-storage'
+import { EnvModule } from '../env/env.module'
 
 @Module({
     imports: [EnvModule],
     providers: [
         {
-         provide: Uploader,
-         useClass: R2Storage,
+            provide: Uploader,
+            useClass: R2Storage,
         },
     ],
-    exports: [
-    Uploader,
-    ],
+    exports: [Uploader],
 })
 export class StorageModule { }

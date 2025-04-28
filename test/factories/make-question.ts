@@ -3,6 +3,7 @@ import {
   Question,
   QuestionProps,
 } from '@/domain/forum/enterprise/entities/question'
+import { QuestionAttachmentList } from '@/domain/forum/enterprise/entities/question-attachment-list'
 import { Slug } from '@/domain/forum/enterprise/entities/value-objects/slug'
 import { PrismaQuestionMapper } from '@/infra/database/prisma/mappers/prisma-question-mapper'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
@@ -17,6 +18,7 @@ export function makeQuestion(
   const question = Question.create(
     {
       authorId: new UniqueEntityId(),
+      attachments: new QuestionAttachmentList(), // aqui!
       title: faker.lorem.sentence(),
       slug: Slug.create(`example-question-${randomUUID()}`),
       content: faker.lorem.text(),

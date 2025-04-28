@@ -32,7 +32,7 @@ export class Question extends AggregateRoot<QuestionProps> {
     }
 
     if (
-     bestAnswerId && this.props.bestAnswerId === this.props.bestAnswerId
+      bestAnswerId && this.props.bestAnswerId === this.props.bestAnswerId
     ) {
       this.addDomainEvent(
         new QuestionBestAnswerChoosenEvent(this, bestAnswerId),
@@ -67,7 +67,7 @@ export class Question extends AggregateRoot<QuestionProps> {
     return this.props.slug
   }
 
-  get createAt() {
+  get createdAt() {
     return this.props.createdAt
   }
 
@@ -80,12 +80,12 @@ export class Question extends AggregateRoot<QuestionProps> {
     this.touch()
   }
 
-  get updateAt() {
+  get updatedAt() {
     return this.props.updatedAt
   }
 
   get isNew(): boolean {
-    return dayjs().diff(this.createAt, 'day') <= 1
+    return dayjs().diff(this.createdAt, 'day') <= 1
   }
 
   get excerpt() {

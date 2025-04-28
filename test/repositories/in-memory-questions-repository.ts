@@ -9,12 +9,21 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 
   constructor(
     private questionAttachmentsRepository: QuestionAttachmentsRepository,
-  ) {}
+  ) { }
 
   async save(question: Question) {
     const itemIndex = this.items.findIndex((item) => item.id === question.id)
 
-    this.items[itemIndex] = question
+    this.items[itemIndex] = question;
+
+    await this.questionAttachmentsRepository.createMany(
+      question.attachments.getNewItems(),
+    );
+
+    await this.questionAttachmentsRepository.deleteMany(
+      question.attachments.getRemovedItems(),
+    );
+
     DomainEvents.dispatchEventsForAggregate(question.id)
   }
 
@@ -34,6 +43,7 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     const itemIndex = this.items.findIndex((item) => item.id === question.id)
 
     this.items.splice(itemIndex, 1)
+
     this.questionAttachmentsRepository.deleteManyByQuestionId(
       question.id.toString(),
     )
@@ -53,7 +63,7 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     const questions = this.items
       .sort(
         (a, b) =>
-          b.createAt.getTime() - a.createAt.getTime() - a.createAt.getTime(),
+          b.createdAt.getTime() - a.createdAt.getTime() - a.createdAt.getTime(),
       )
       .slice((page - 1) * 20, page * 20)
 
@@ -62,6 +72,11 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 
   async create(question: Question) {
     this.items.push(question)
+
+    await this.questionAttachmentsRepository.createMany(
+      question.attachments.getItems(),
+    );
+
     DomainEvents.dispatchEventsForAggregate(question.id)
   }
 }

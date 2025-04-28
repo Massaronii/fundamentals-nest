@@ -41,8 +41,6 @@ export class R2Storage implements Uploader {
             })
         )
 
-        
-
         return {
             url: uniqueFilName
         }

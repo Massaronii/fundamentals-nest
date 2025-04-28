@@ -51,7 +51,6 @@ describe('Answer question Controller (E2E)', () => {
                 AttachmentsIds: []
             })
 
-            console.log(response.body)
 
         expect(response.statusCode).toBe(201);
 
