@@ -41,15 +41,21 @@ describe('Fetch recent questions', () => {
       page: 1,
     })
 
-    expect(result.value?.questions).toEqual([
+    expect(result.value?.questions).toMatchObject([
       expect.objectContaining({
-        createAt: new Date(2022, 1, 3),
+        props: expect.objectContaining({
+          createdAt: new Date(2022, 1, 3),
+        }),
       }),
       expect.objectContaining({
-        createAt: new Date(2022, 1, 2),
+        props: expect.objectContaining({
+          createdAt: new Date(2022, 1, 2),
+        }),
       }),
       expect.objectContaining({
-        createAt: new Date(2022, 1, 1),
+        props: expect.objectContaining({
+          createdAt: new Date(2022, 1, 1),
+        }),
       }),
     ])
   })
