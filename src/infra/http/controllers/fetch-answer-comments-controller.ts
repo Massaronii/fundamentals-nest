@@ -3,6 +3,7 @@ import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
 import { number, z } from "zod";
 import { CommentPresenter } from "../presenters/comment-presenter";
 import { FetchAnswerCommentUseCase } from "@/domain/forum/application/use-cases/fetch-answer-comments";
+import { CommentWithAuthorPresenter } from "../presenters/comment-with-author-presenter";
 
 const pageQueryParamSchema = z.string()
     .optional()
@@ -35,9 +36,9 @@ export class FetchAnswerCommentsController {
             throw new BadRequestException();
         }
 
-        const answerComments = result.value.answerComments;
+        const comments = result.value.comments;
 
-        return { comments: answerComments.map(CommentPresenter.toHTTPAnswer) };
+        return { comments: comments.map(CommentWithAuthorPresenter.toHTTP) };
 
     }
 }
