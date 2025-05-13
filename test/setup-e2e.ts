@@ -1,14 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
-import 'dotenv/config';
+import { config } from 'dotenv';
 import { execSync } from 'node:child_process';
+
+config({ path: '.env', override: true });
+config({ path: '.env.test', override: true });
 
 const prisma = new PrismaClient();
 const schemaId = randomUUID();
 
 
-function generateUniqueDataBaseURL(schemaId: string){
-    if(!process.env.DATABASE_URL) {
+function generateUniqueDataBaseURL(schemaId: string) {
+    if (!process.env.DATABASE_URL) {
         throw new Error('DATABASE_URL is not set');
     }
 

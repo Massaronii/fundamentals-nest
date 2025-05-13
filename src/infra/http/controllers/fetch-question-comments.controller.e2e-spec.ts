@@ -10,64 +10,72 @@ import { QuestionCommentFactory } from 'test/factories/make-question-comment'
 import { StudentFactory } from 'test/factories/make-student'
 
 describe('Fetch question comments (E2E)', () => {
-    let app: INestApplication
-    let studentFactory: StudentFactory
-    let prisma: PrismaService
-    let questionFactory: QuestionFactory
-    let questionCommentFactory: QuestionCommentFactory
-    let jwt: JwtService
+  let app: INestApplication
+  let studentFactory: StudentFactory
+  let prisma: PrismaService
+  let questionFactory: QuestionFactory
+  let questionCommentFactory: QuestionCommentFactory
+  let jwt: JwtService
 
-    beforeAll(async () => {
-        const moduleRef = await Test.createTestingModule({
-            imports: [AppModule, DatabaseModule],
-            providers: [StudentFactory, QuestionFactory, QuestionCommentFactory],
-        }).compile()
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule, DatabaseModule],
+      providers: [StudentFactory, QuestionFactory, QuestionCommentFactory],
+    }).compile()
 
-        app = moduleRef.createNestApplication()
+    app = moduleRef.createNestApplication()
 
-        prisma = moduleRef.get(PrismaService)
-        studentFactory = moduleRef.get(StudentFactory)
-        questionFactory = moduleRef.get(QuestionFactory)
-        questionCommentFactory = moduleRef.get(QuestionCommentFactory)
-        jwt = moduleRef.get(JwtService)
+    prisma = moduleRef.get(PrismaService)
+    studentFactory = moduleRef.get(StudentFactory)
+    questionFactory = moduleRef.get(QuestionFactory)
+    questionCommentFactory = moduleRef.get(QuestionCommentFactory)
+    jwt = moduleRef.get(JwtService)
 
-        await app.init()
+    await app.init()
+  })
+
+  test('[GET] /questions/:questionId/comments', async () => {
+    const user = await studentFactory.makePrismaStudent({
+      name: 'John Doe',
     })
 
-    test('[GET] /questions/:questionId/comments', async () => {
-        const user = await studentFactory.makePrismaStudent()
+    const accessToken = jwt.sign({ sub: user.id.toString() })
 
-        const accessToken = jwt.sign({ sub: user.id.toString() })
-
-        const question = await questionFactory.makePrismaQuestion({
-            authorId: user.id,
-        })
-
-        const questionComments = await questionCommentFactory.makePrismaQuestionComment({
-            authorId: user.id,
-            questionId: question.id,
-        })
-
-        const response = await request(app.getHttpServer())
-            .get(`/questions/${question.id.toString()}/comments`)
-            .set('Authorization', `Bearer ${accessToken}`)
-            .send()
-
-
-        const commentOnDatabase = await prisma.comment.findUnique({
-            where: {
-                id: questionComments.id.toString(),
-            },
-        });
-
-        expect(commentOnDatabase).toBeTruthy();
-        expect(response.statusCode).toBe(200)
-        expect(response.body.comments).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({
-                    content: questionComments.content,  // Verifica se o conteúdo do comentário na resposta é o mesmo do criado.
-                }),
-            ])
-        );
+    const question = await questionFactory.makePrismaQuestion({
+      authorId: user.id,
     })
+
+    await Promise.all([
+      questionCommentFactory.makePrismaQuestionComment({
+        authorId: user.id,
+        questionId: question.id,
+        content: 'Comment 01',
+      }),
+      questionCommentFactory.makePrismaQuestionComment({
+        authorId: user.id,
+        questionId: question.id,
+        content: 'Comment 02',
+      }),
+    ])
+
+    const response = await request(app.getHttpServer())
+      .get(`/questions/${question.id.toString()}/comments`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send()
+
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toEqual({
+      comments: expect.arrayContaining([
+        expect.objectContaining({
+          content: 'Comment 01',
+          authorName: 'John Doe',
+        }),
+        expect.objectContaining({
+          content: 'Comment 02',
+          authorName: 'John Doe',
+        }),
+      ]),
+    })
+  })
 })

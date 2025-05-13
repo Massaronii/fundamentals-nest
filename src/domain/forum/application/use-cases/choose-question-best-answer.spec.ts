@@ -7,22 +7,30 @@ import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 import { InMemoryAnswerAttachmentRepository } from 'test/repositories/in-memory-answers-attachments'
 import { InMemoryQuestionAttachmentRepository } from 'test/repositories/in-memory-question-attachments-repository'
+import { InMemoryAttachmentRepository } from 'test/repositories/in-memory-attachments-repository'
+import { InMemoryStudentRepository } from 'test/repositories/in-memory-students-repository'
 
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentRepository
 let inMemoryAnswerAttachmentRepository: InMemoryAnswerAttachmentRepository
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+let inMemoryAttachmentRepository: InMemoryAttachmentRepository
+let inMemoryStudentRepository: InMemoryStudentRepository
 let inMemoryAnswersRepository: InMemoryAnswersRepository
 let sut: ChooseQuestionBestAnswerUseCase
 
 // sut = system under test
 describe('Choose Question Best Answer', () => {
   beforeEach(() => {
+    inMemoryStudentRepository = new InMemoryStudentRepository()
+    inMemoryAttachmentRepository = new InMemoryAttachmentRepository()
     inMemoryQuestionAttachmentsRepository =
       new InMemoryQuestionAttachmentRepository()
     inMemoryAnswerAttachmentRepository =
       new InMemoryAnswerAttachmentRepository()
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentsRepository,
+      inMemoryAttachmentRepository,
+      inMemoryStudentRepository
     )
     inMemoryAnswersRepository = new InMemoryAnswersRepository(
       inMemoryAnswerAttachmentRepository,

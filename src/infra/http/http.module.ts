@@ -37,9 +37,12 @@ import { FetchQuestionCommentsController } from "./controllers/fetch-question-co
 import { FetchQuestionCommentsUseCase } from "@/domain/forum/application/use-cases/fetch-question-comment";
 import { FetchAnswerCommentsController } from "./controllers/fetch-answer-comments-controller";
 import { FetchAnswerCommentUseCase } from "@/domain/forum/application/use-cases/fetch-answer-comments";
+import { UploadAttachmentController } from "./controllers/upload-attachment.controller";
+import { StorageModule } from "../storage/storage.module";
+import { UploadAndCreateAttachmentUseCase } from "@/domain/forum/application/use-cases/upload-and-create-attachment";
 
 @Module({
-    imports: [DatabaseModule, CryptographyModule],
+    imports: [DatabaseModule, CryptographyModule, StorageModule],
     controllers: [
         CreateAccountController,
         AuthenticateController,
@@ -58,8 +61,9 @@ import { FetchAnswerCommentUseCase } from "@/domain/forum/application/use-cases/
         CommentOnAnswerController,
         DeleteAnswerCommentController,
         FetchQuestionCommentsController,
-        FetchAnswerCommentsController
-    ],
+        FetchAnswerCommentsController,
+        UploadAttachmentController,
+    ], 
     providers: [
         CreateQuestionUseCase,
         FetchRecentQuestionsUseCase,
@@ -78,7 +82,8 @@ import { FetchAnswerCommentUseCase } from "@/domain/forum/application/use-cases/
         CommentOnAnswerUseCase,
         DeleteAnswerCommentAnswerUseCase,
         FetchQuestionCommentsUseCase,
-        FetchAnswerCommentUseCase
+        FetchAnswerCommentUseCase,
+        UploadAndCreateAttachmentUseCase
     ],
 })
 export class HttpModule { }

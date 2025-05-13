@@ -9,6 +9,32 @@ export class PrismaAnswerAttachmentsRepository implements AnswerAttachmentsRepos
 
     constructor(private prisma: PrismaService) { }
 
+     async deleteMany(attachments: AnswerAttachment[]): Promise<void> {
+        if (attachments.length === 0) {
+            return;
+        }
+
+        const attachmentIds = attachments.map(attachment => attachment.attachmentId.toString());
+
+        await this.prisma.attachment.deleteMany({
+            where: {
+                id: {
+                    in: attachmentIds,
+                }
+            }
+        });
+    }
+
+    async createMany(attachments: AnswerAttachment[]): Promise<void> {       
+        if (attachments.length === 0) {
+            return;
+        }
+
+        const data = PrismaAnswerAttachmentMapper.toPersistenceUpdateMany(attachments);
+
+        await this.prisma.attachment.updateMany(data);
+    }
+
     async findManyByAnswerId(answerId: string): Promise<AnswerAttachment[]> {
         const answerAttachment = await this.prisma.attachment.findMany({
             where: {

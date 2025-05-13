@@ -2,9 +2,24 @@ import { QuestionAttachmentsRepository } from '@/domain/forum/application/reposi
 import { QuestionAttachment } from '@/domain/forum/enterprise/entities/question-attachment'
 
 export class InMemoryQuestionAttachmentRepository
-  implements QuestionAttachmentsRepository
-{
+  implements QuestionAttachmentsRepository {
+
   public items: QuestionAttachment[] = []
+
+  async deleteMany(attachments: QuestionAttachment[]): Promise<void> {
+    const questionAttachment = this.items.filter(
+      (item) => {
+        return !attachments.some(attachment => attachment.equals(item))
+      }
+    )
+
+    this.items = questionAttachment
+
+  }
+
+  async createMany(attachments: QuestionAttachment[]): Promise<void> {
+    this.items.push(...attachments)
+  }
 
   async findManyByQuestionId(questionId: string) {
     const questionAttachment = this.items.filter(
@@ -21,4 +36,5 @@ export class InMemoryQuestionAttachmentRepository
 
     this.items = questionAttachment
   }
+
 }

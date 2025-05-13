@@ -1,5 +1,6 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Question } from "@/domain/forum/enterprise/entities/question";
+import { QuestionAttachmentList } from "@/domain/forum/enterprise/entities/question-attachment-list";
 import { Slug } from "@/domain/forum/enterprise/entities/value-objects/slug";
 import { Question as PrismaQuestion, Prisma} from "@prisma/client";
 
@@ -11,6 +12,7 @@ export class PrismaQuestionMapper {
             slug: Slug.create(raw.slug),
             authorId: new UniqueEntityId(raw.authorId),
             bestAnswerId: raw.bestAnswerId ? new UniqueEntityId(raw.bestAnswerId) : null,
+            attachments: new QuestionAttachmentList(),
             createdAt: raw.createdAt,
             updatedAt: raw.updatedAt ? raw.updatedAt : null,
         }, 
@@ -25,8 +27,8 @@ export class PrismaQuestionMapper {
             slug: question.slug.value,
             authorId: question.authorId.toString(),
             bestAnswerId: question.bestAnswerId?.toString(),
-            createdAt: question.createAt,
-            updatedAt: question.updateAt,
+            createdAt: question.createdAt,
+            updatedAt: question.updatedAt,
         }
     }
 }

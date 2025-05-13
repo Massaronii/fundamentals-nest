@@ -2,19 +2,30 @@ import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questio
 import { FetchRecentQuestionsUseCase } from './fetch-recent-questions'
 import { makeQuestion } from 'test/factories/make-question'
 import { InMemoryQuestionAttachmentRepository } from 'test/repositories/in-memory-question-attachments-repository'
+import { InMemoryStudentRepository } from 'test/repositories/in-memory-students-repository'
+import { InMemoryAttachmentRepository } from 'test/repositories/in-memory-attachments-repository'
 
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentRepository
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+let inMemoryAttachmentRepository: InMemoryAttachmentRepository
+let inMemoryStudentRepository: InMemoryStudentRepository
 let sut: FetchRecentQuestionsUseCase
 
 // sut = system under test
 describe('Fetch recent questions', () => {
   beforeEach(() => {
+
+    inMemoryAttachmentRepository = new InMemoryAttachmentRepository()
+    inMemoryStudentRepository = new InMemoryStudentRepository()
+
     inMemoryQuestionAttachmentsRepository =
       new InMemoryQuestionAttachmentRepository()
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentsRepository,
+      inMemoryAttachmentRepository,
+      inMemoryStudentRepository
     )
+    
     sut = new FetchRecentQuestionsUseCase(inMemoryQuestionsRepository)
   })
 
@@ -41,15 +52,21 @@ describe('Fetch recent questions', () => {
       page: 1,
     })
 
-    expect(result.value?.questions).toEqual([
+    expect(result.value?.questions).toMatchObject([
       expect.objectContaining({
-        createAt: new Date(2022, 1, 3),
+        props: expect.objectContaining({
+          createdAt: new Date(2022, 1, 3),
+        }),
       }),
       expect.objectContaining({
-        createAt: new Date(2022, 1, 2),
+        props: expect.objectContaining({
+          createdAt: new Date(2022, 1, 2),
+        }),
       }),
       expect.objectContaining({
-        createAt: new Date(2022, 1, 1),
+        props: expect.objectContaining({
+          createdAt: new Date(2022, 1, 1),
+        }),
       }),
     ])
   })
