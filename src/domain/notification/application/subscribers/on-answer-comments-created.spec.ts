@@ -10,6 +10,8 @@ import { makeQuestion } from 'test/factories/make-question'
 import { waitFor } from 'test/utils/wait-for'
 import { makeAnswerComment } from 'test/factories/make-answer-comment'
 import { InMemoryAnswerCommentsRepository } from 'test/repositories/in-memory-answers-comments-repository'
+import { InMemoryStudentRepository } from 'test/repositories/in-memory-students-repository'
+import { InMemoryAttachmentRepository } from 'test/repositories/in-memory-attachments-repository'
 
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentRepository
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
@@ -17,24 +19,35 @@ let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentRepository
 let inMemoryAnswersRepository: InMemoryAnswersRepository
 let inMemoryNotificationsRepository: InMemoryNotificationsRepository
 let sendNotificationUseCase: SendNotificationUseCase
+let inMemoryStudentRepository: InMemoryStudentRepository
+let inMemoryAttachmentRepository: InMemoryAttachmentRepository
 let inMemoryAnswerCommentsRepository: InMemoryAnswerCommentsRepository
 
 let sendNotificationExecuteSpy: any
 
 describe('On answer comments created', () => {
   beforeEach(() => {
-    inMemoryAnswerCommentsRepository = new InMemoryAnswerCommentsRepository()
+    inMemoryAnswerCommentsRepository = new InMemoryAnswerCommentsRepository(
+      inMemoryStudentRepository,
+    )
     inMemoryQuestionAttachmentsRepository =
       new InMemoryQuestionAttachmentRepository()
+
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentsRepository,
+      inMemoryAttachmentRepository,
+      inMemoryStudentRepository
     )
+
     inMemoryNotificationsRepository = new InMemoryNotificationsRepository()
+
     inMemoryAnswerAttachmentsRepository =
       new InMemoryAnswerAttachmentRepository()
+
     inMemoryAnswersRepository = new InMemoryAnswersRepository(
       inMemoryAnswerAttachmentsRepository,
     )
+    
     sendNotificationUseCase = new SendNotificationUseCase(
       inMemoryNotificationsRepository,
     )

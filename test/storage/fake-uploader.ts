@@ -1,6 +1,5 @@
 import { Uploader, UploaderProps } from "@/domain/forum/application/storage/uploader";
 import { randomUUID } from "node:crypto";
-import { url } from "inspector";
 
 interface Upload {
     fileName: string;

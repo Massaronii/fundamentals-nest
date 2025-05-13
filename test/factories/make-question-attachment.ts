@@ -3,7 +3,6 @@ import {
   QuestionAttachment,
   QuestionAttachmentProps,
 } from '@/domain/forum/enterprise/entities/question-attachment'
-import { PrismaAttachmentMapper } from '@/infra/database/prisma/mappers/prisma-attachment-mapper'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 
