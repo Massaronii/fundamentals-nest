@@ -4,6 +4,7 @@ import { envSchema } from './env/env';
 import { HttpModule } from './http/http.module';
 import { AuthModule } from './auth/auth.module';
 import { EnvModule } from './env/env.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -12,7 +13,8 @@ import { EnvModule } from './env/env.module';
   }),
     AuthModule,
     HttpModule,
-    EnvModule
+    EnvModule,
+    EventsModule,
   ]
 })
 export class AppModule { }
