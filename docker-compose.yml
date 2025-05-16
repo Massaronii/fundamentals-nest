@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-   postgres:
+  postgres:
      container_name: nest-fundamentals-postgres
      image: postgres
      ports:
@@ -13,3 +13,12 @@ services:
        PGDATA: /data/postgres
      volumes:
       - ./data/pg:/data/postgres
+  
+
+  cache:
+    container_name: nest-fundamentals-cache
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data/redis:/data
